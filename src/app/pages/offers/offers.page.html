@@ -1,0 +1,70 @@
+<ion-header class="redbus-header">
+  <ion-toolbar>
+    <ion-title>Offers & Promotions</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="payment">
+        <ion-label>Payment</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="seasonal">
+        <ion-label>Seasonal</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="first-time">
+        <ion-label>First Time</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="filteredOffers.length === 0" class="empty-state">
+    <ion-icon name="gift-outline"></ion-icon>
+    <h3>No offers available</h3>
+    <p>Check back later for new offers</p>
+  </div>
+
+  <ion-list *ngIf="filteredOffers.length > 0">
+    <ion-card *ngFor="let offer of filteredOffers" class="offer-card">
+      <img [src]="offer.image" alt="Offer image"/>
+      
+      <ion-card-header>
+        <div class="offer-header">
+          <ion-card-title>{{offer.title}}</ion-card-title>
+          <div class="discount-badge">{{offer.discount}}</div>
+        </div>
+        <ion-card-subtitle>Valid until {{offer.validUntil}}</ion-card-subtitle>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <p class="offer-description">{{offer.description}}</p>
+        
+        <div class="offer-details">
+          <div *ngIf="offer.minAmount" class="detail-item">
+            <ion-icon name="cash-outline"></ion-icon>
+            <span>Min. order: ${{offer.minAmount}}</span>
+          </div>
+          
+          <div *ngIf="offer.maxDiscount" class="detail-item">
+            <ion-icon name="trending-down-outline"></ion-icon>
+            <span>Max. discount: ${{offer.maxDiscount}}</span>
+          </div>
+        </div>
+        
+        <div class="code-container">
+          <div class="code">{{offer.code}}</div>
+          <ion-button fill="clear" color="primary" (click)="copyCode(offer.code)">
+            <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+          </ion-button>
+        </div>
+        
+        <ion-button expand="block" class="redbus-button" routerLink="/tabs/home">
+          BOOK NOW
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

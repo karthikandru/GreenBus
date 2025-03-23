@@ -1,0 +1,45 @@
+﻿<ion-header class="redbus-header">
+  <ion-toolbar>
+    <ion-title>Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="profile-header">
+    <div class="avatar">
+      <ion-icon name="person"></ion-icon>
+    </div>
+    <div class="user-info">
+      <h2>{{user.name}}</h2>
+      <p>{{user.email}}</p>
+      <p>{{user.phone}}</p>
+    </div>
+  </div>
+  
+  <div class="wallet-card">
+    <div class="wallet-balance">
+      <div class="label">Wallet Balance</div>
+      <div class="amount">₹ {{user.walletBalance}}</div>
+    </div>
+    <ion-button fill="clear" color="primary">
+      Add Money
+    </ion-button>
+  </div>
+  
+  <ion-list lines="full">
+    <ion-item *ngFor="let item of menuItems" detail="true" button>
+      <ion-icon slot="start" [name]="item.icon" color="primary"></ion-icon>
+      <ion-label>{{item.title}}</ion-label>
+    </ion-item>
+    
+    <ion-item button (click)="logout()">
+      <ion-icon slot="start" name="log-out-outline" color="danger"></ion-icon>
+      <ion-label color="danger">Logout</ion-label>
+    </ion-item>
+  </ion-list>
+  
+  <div class="app-info">
+    <p>App Version 1.0.0</p>
+    <p>&copy; 2025 Green Bus. All rights reserved.</p>
+  </div>
+</ion-content>

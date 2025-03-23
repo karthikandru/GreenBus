@@ -1,0 +1,7 @@
+{
+  "name": "redbus-ionic-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

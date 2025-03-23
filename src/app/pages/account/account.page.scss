@@ -1,0 +1,93 @@
+.redbus-header {
+  ion-toolbar {
+    --background: var(--ion-color-primary);
+    --color: white;
+  }
+}
+
+.profile-header {
+  background: var(--ion-color-primary);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  
+  .avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    
+    ion-icon {
+      font-size: 40px;
+      color: white;
+    }
+  }
+  
+  .user-info {
+    color: white;
+    
+    h2 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    p {
+      margin: 0 0 4px 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+  }
+}
+
+.wallet-card {
+  background: white;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .wallet-balance {
+    .label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    
+    .amount {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+ion-list {
+  margin-bottom: 16px;
+  
+  ion-item {
+    --padding-start: 16px;
+    
+    ion-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+.app-info {
+  text-align: center;
+  padding: 16px;
+  color: #999;
+  font-size: 12px;
+  
+  p {
+    margin: 4px 0;
+  }
+}

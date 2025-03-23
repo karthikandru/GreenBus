@@ -1,0 +1,257 @@
+﻿<ion-header class="redbus-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home/bus-list"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="bus">
+      <div class="bus-title">
+        <div>{{bus.name}}</div>
+        <div class="bus-type">{{bus.type}}</div>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+  
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="seats">
+        <ion-label>Seats</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="reviews">
+        <ion-label>Reviews</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!bus" class="loading-container">
+    <ion-spinner></ion-spinner>
+    <p>Loading bus details...</p>
+  </div>
+  
+  <div *ngIf="bus">
+    <!-- Journey Info Card -->
+    <ion-card class="journey-card">
+      <ion-card-content>
+        <div class="journey-details">
+          <div class="time-place">
+            <div class="time">{{bus.departureTime}}</div>
+            <div class="place">New York</div>
+          </div>
+          
+          <div class="journey-divider">
+            <div class="duration">{{bus.duration}}</div>
+            <div class="line"></div>
+          </div>
+          
+          <div class="time-place">
+            <div class="time">{{bus.arrivalTime}}</div>
+            <div class="place">Boston</div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    
+    <!-- Seats Section -->
+    <div *ngIf="segment === 'seats'" class="seats-container">
+      <div class="seat-map-container">
+        <div class="seat-map-header">
+          <div class="driver-section">
+            <ion-icon name="steering-outline"></ion-icon>
+            <span>Driver</span>
+          </div>
+          
+          <div class="seat-legend">
+            <div class="legend-item">
+              <div class="seat-icon available"></div>
+              <span>Available</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat-icon unavailable"></div>
+              <span>Booked</span>
+            </div>
+            <div class="legend-item">
+              <div class="seat-icon selected"></div>
+              <span>Selected</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="seat-map">
+          <div class="seat-grid">
+            <div *ngFor="let row of getRows()" class="seat-row">
+              <div *ngFor="let col of getColumns()" 
+                   class="seat" 
+                   [ngClass]="getSeatStatus(row, col)"
+                   (click)="toggleSeatSelection(getSeatId(row, col))">
+                {{getSeatId(row, col)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="selected-seats-summary" *ngIf="selectedSeats.length > 0">
+        <div class="summary-header">
+          <div class="seats-count">{{selectedSeats.length}} Seat(s) Selected</div>
+          <div class="seats-list">{{selectedSeats.join(', ')}}</div>
+        </div>
+        
+        <div class="price-summary">
+          <div class="price-item">
+            <span>Base Fare</span>
+            <span>₹ {{bus.price * selectedSeats.length}}</span>
+          </div>
+          <div class="price-item">
+            <span>Service Fee</span>
+            <span>₹ 2.00</span>
+          </div>
+          <div class="price-item total">
+            <span>Total</span>
+            <span>₹ {{getTotalPrice() + 2}}</span>
+          </div>
+        </div>
+        
+        <ion-button expand="block" class="redbus-button" (click)="proceedToPayment()">
+          PROCEED TO PAYMENT
+        </ion-button>
+      </div>
+    </div>
+    
+    <!-- Details Section -->
+    <div *ngIf="segment === 'details'" class="details-container">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Bus Information</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list lines="full">
+            <ion-item>
+              <ion-label>
+                <h3>Bus Type</h3>
+                <p>{{bus.type}}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Departure</h3>
+                <p>{{bus.departureTime}} - New York</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Arrival</h3>
+                <p>{{bus.arrivalTime}} - Boston</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Duration</h3>
+                <p>{{bus.duration}}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>Rating</h3>
+                <p>
+                  <ion-icon name="star" color="warning"></ion-icon>
+                  {{bus.rating}} / 5
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Amenities</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="amenities-list">
+            <div *ngFor="let amenity of bus.amenities" class="amenity-item">
+              <ion-icon name="checkmark-circle" color="primary"></ion-icon>
+              <span>{{amenity}}</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Cancellation Policy</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list lines="full">
+            <ion-item>
+              <ion-label>
+                <h3>> 24 hours before departure</h3>
+                <p>75% refund</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>12-24 hours before departure</h3>
+                <p>50% refund</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <h3>< 12 hours before departure</h3>
+                <p>No refund</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div *ngIf="segment === 'reviews'" class="reviews-container">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>
+            <div class="rating-summary">
+              <div class="rating-value">
+                <span class="rating-number">{{bus.rating}}</span>
+                <span class="out-of">/5</span>
+              </div>
+              <div class="rating-stars">
+                <ion-icon *ngFor="let i of [1,2,3,4,5]" 
+                         [name]="i <= bus.rating ? 'star' : (i <= bus.rating + 0.5 ? 'star-half' : 'star-outline')" 
+                         color="warning"></ion-icon>
+              </div>
+              <div class="rating-count">Based on {{bus.reviews.length}} reviews</div>
+            </div>
+          </ion-card-title>
+        </ion-card-header>
+      </ion-card>
+      
+      <ion-card *ngFor="let review of bus.reviews" class="review-card">
+        <ion-card-header>
+          <ion-card-subtitle>
+            <div class="review-header">
+              <div class="reviewer-name">{{review.userName}}</div>
+              <div class="review-date">{{review.date}}</div>
+            </div>
+            <div class="review-rating">
+              <ion-icon *ngFor="let i of [1,2,3,4,5]" 
+                       [name]="i <= review.rating ? 'star' : 'star-outline'" 
+                       color="warning"></ion-icon>
+            </div>
+          </ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <p class="review-comment">{{review.comment}}</p>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-button expand="block" fill="outline" class="write-review-btn">
+        WRITE A REVIEW
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

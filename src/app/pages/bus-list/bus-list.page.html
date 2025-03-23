@@ -1,0 +1,121 @@
+﻿<ion-header class="redbus-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <div class="route-info">
+        <div class="route">{{from}} to {{to}}</div>
+        <div class="date">{{date}}</div>
+      </div>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="filter-sort-container">
+    <ion-segment scrollable>
+      <ion-segment-button (click)="sortBuses('departure')">
+        <ion-label>Departure</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="sortBuses('duration')">
+        <ion-label>Duration</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="sortBuses('price')">
+        <ion-label>Price</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="sortBuses('rating')">
+        <ion-label>Rating</ion-label>
+      </ion-segment-button>
+      <ion-segment-button (click)="sortBuses('seats')">
+        <ion-label>Seats</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <ion-item-divider>
+    <ion-label>
+      {{filteredBuses.length}} buses found
+    </ion-label>
+    <ion-button slot="end" fill="clear" (click)="resetFilters()">
+      Reset Filters
+    </ion-button>
+  </ion-item-divider>
+
+  <ion-list>
+    <ion-item *ngFor="let bus of filteredBuses" [routerLink]="['bus-details', bus.id]" detail="false" class="bus-item">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <div class="bus-name">{{bus.name}}</div>
+            <div class="bus-type">{{bus.type}}</div>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row class="time-row">
+          <ion-col size="4">
+            <div class="bus-time">{{bus.departureTime}}</div>
+            <div class="time-label">Departure</div>
+          </ion-col>
+          
+          <ion-col size="4" class="duration-col">
+            <div class="duration">{{bus.duration}}</div>
+            <div class="duration-line"></div>
+          </ion-col>
+          
+          <ion-col size="4" class="text-right">
+            <div class="bus-time">{{bus.arrivalTime}}</div>
+            <div class="time-label">Arrival</div>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row class="details-row">
+          <ion-col size="6">
+            <div class="rating">
+              <ion-icon name="star" color="warning"></ion-icon>
+              {{bus.rating}}
+            </div>
+            <div class="seats">
+              <ion-icon name="person-outline"></ion-icon>
+              {{bus.availableSeats}} seats left
+            </div>
+          </ion-col>
+          
+          <ion-col size="6" class="price-col">
+             <div class="bus-price">₹ {{bus.price}}</div>
+            <ion-button expand="block" fill="solid" color="primary" class="view-seats-btn">
+              View Seats
+            </ion-button>
+          </ion-col>
+        </ion-row>
+        
+        <ion-row *ngIf="bus.amenities.length > 0" class="amenities-row">
+          <ion-col size="12">
+            <div class="amenities">
+              <span *ngFor="let amenity of bus.amenities" class="amenity-tag">
+                {{amenity}}
+              </span>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="options-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="light">
+        <ion-icon name="time-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light">
+        <ion-icon name="bus-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light">
+        <ion-icon name="cash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>

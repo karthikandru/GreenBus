@@ -1,0 +1,88 @@
+<ion-header class="redbus-header">
+  <ion-toolbar>
+    <ion-title>My Bookings</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="upcoming">
+        <ion-label>Upcoming</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="completed">
+        <ion-label>Completed</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cancelled">
+        <ion-label>Cancelled</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="filteredBookings.length === 0" class="empty-state">
+    <ion-icon name="ticket-outline"></ion-icon>
+    <h3>No {{segment}} bookings</h3>
+    <p *ngIf="segment === 'upcoming'">Book a bus ticket to see it here</p>
+    <ion-button *ngIf="segment === 'upcoming'" routerLink="/tabs/home" expand="block" class="redbus-button">
+      Book Now
+    </ion-button>
+  </div>
+
+  <ion-list *ngIf="filteredBookings.length > 0">
+    <ion-card *ngFor="let booking of filteredBookings" class="booking-card">
+      <ion-card-header>
+        <ion-card-subtitle>
+          <ion-badge [color]="getStatusColor(booking.status)">{{booking.status | titlecase}}</ion-badge>
+          <span class="booking-id">Booking ID: {{booking.id}}</span>
+        </ion-card-subtitle>
+        <ion-card-title>{{booking.busName}}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="journey-details">
+          <div class="route-details">
+            <div class="location">
+              <div class="time">{{booking.departureTime}}</div>
+              <div class="place">{{booking.from}}</div>
+            </div>
+            
+            <div class="journey-line">
+              <div class="date">{{booking.date}}</div>
+            </div>
+            
+            <div class="location">
+              <div class="time">{{booking.arrivalTime}}</div>
+              <div class="place">{{booking.to}}</div>
+            </div>
+          </div>
+          
+          <div class="seat-details">
+            <div class="label">Seat(s)</div>
+            <div class="seats">{{booking.seatNumbers.join(', ')}}</div>
+          </div>
+          
+          <div class="amount-details">
+            <div class="label">Total Amount</div>
+            <div class="amount">${{booking.totalAmount}}</div>
+          </div>
+        </div>
+        
+        <div class="booking-actions">
+          <ion-button fill="clear" color="primary" (click)="downloadTicket(booking)">
+            <ion-icon slot="start" name="download-outline"></ion-icon>
+            Download
+          </ion-button>
+          
+          <ion-button *ngIf="booking.status === 'upcoming'" fill="clear" color="danger" (click)="cancelBooking(booking)">
+            <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+            Cancel
+          </ion-button>
+          
+          <ion-button *ngIf="booking.status === 'completed'" fill="clear" color="medium">
+            <ion-icon slot="start" name="star-outline"></ion-icon>
+            Rate
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
