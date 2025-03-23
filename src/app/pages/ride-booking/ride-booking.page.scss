@@ -17,6 +17,24 @@ ion-card {
          font-size: 0.9rem;
          color: #666;
       }
+
+      ion-item {
+         --padding-start: 0;
+         --inner-padding-end: 0;
+         --background: transparent;
+
+         ion-label {
+            font-weight: 500;
+            color: var(--ion-color-dark);
+         }
+
+         ion-toggle {
+            --background: #e0e0e0;
+            --background-checked: var(--ion-color-success);
+            --handle-background: #ffffff;
+            --handle-background-checked: #ffffff;
+         }
+      }
    }
 
    ion-card-content {

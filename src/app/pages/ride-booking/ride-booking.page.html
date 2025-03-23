@@ -3,76 +3,81 @@
       <ion-buttons slot="start">
          <ion-back-button></ion-back-button>
       </ion-buttons>
-      <ion-title>Optional Ride Booking</ion-title>
+      <ion-title>Ride Booking</ion-title>
    </ion-toolbar>
 </ion-header>
 
 <ion-content>
    <ion-card>
       <ion-card-header>
-         <ion-card-title>Select Your Ride (Optional)</ion-card-title>
-         <ion-card-subtitle>Choose a ride for last-mile connectivity</ion-card-subtitle>
+         <ion-card-title>Book Your Journey</ion-card-title>
+         <ion-item lines="none" class="ion-margin-top">
+            <ion-label>Include Last-Mile Ride</ion-label>
+            <ion-toggle [(ngModel)]="includeRide" (ionChange)="toggleRideBooking()"></ion-toggle>
+         </ion-item>
       </ion-card-header>
 
       <ion-card-content>
          <form (ngSubmit)="confirmBooking()" #rideForm="ngForm">
-            <ion-item>
-               <ion-label position="stacked">Pickup Location</ion-label>
-               <ion-searchbar [(ngModel)]="pickupLocation"
-                              name="pickupLocation"
-                              required
-                              placeholder="Search pickup location"
-                              (ionInput)="searchLocations($event, 'pickup')"
-                              [debounce]="500">
-               </ion-searchbar>
-            </ion-item>
-            <ion-list *ngIf="showPickupResults && filteredPickupLocations.length > 0">
-               <ion-item *ngFor="let location of filteredPickupLocations" (click)="selectLocation(location, 'pickup')">
-                  <ion-label>{{ location.name }}</ion-label>
-                  <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
+            <div *ngIf="includeRide">
+               <ion-item>
+                  <ion-label position="stacked">Pickup Location</ion-label>
+                  <ion-searchbar [(ngModel)]="pickupLocation"
+                                 name="pickupLocation"
+                                 required
+                                 placeholder="Search pickup location"
+                                 (ionInput)="searchLocations($event, 'pickup')"
+                                 [debounce]="500">
+                  </ion-searchbar>
                </ion-item>
-            </ion-list>
-            <ion-item>
-               <ion-label position="stacked">Drop Location</ion-label>
-               <ion-searchbar [(ngModel)]="dropLocation"
-                              name="dropLocation"
-                              required
-                              placeholder="Search drop location"
-                              (ionInput)="searchLocations($event, 'drop')"
-                              [debounce]="500">
-               </ion-searchbar>
-            </ion-item>
-            <ion-list *ngIf="showDropResults && filteredDropLocations.length > 0">
-               <ion-item *ngFor="let location of filteredDropLocations" (click)="selectLocation(location, 'drop')">
-                  <ion-label>{{ location.name }}</ion-label>
-                  <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
-               </ion-item>
-            </ion-list>
-            <div *ngIf="selectedPickupLocation && selectedDropLocation" class="ride-selection">
-               <ion-text color="success" class="available-rides-text">
-                  <h2>Available Rides</h2>
-               </ion-text>
-               <ion-radio-group [(ngModel)]="selectedRideType" name="rideType" required>
-                  <ion-item *ngFor="let ride of rideTypes">
-                     <ion-label>
-                        <h2>
-                           <ion-icon [name]="ride.icon"></ion-icon>
-                           {{ ride.name }}
-                        </h2>
-                        <p>₹{{ getRidePrice(ride.id) }}</p>
-                     </ion-label>
-                     <ion-radio [value]="ride.id" slot="start"></ion-radio>
+               <ion-list *ngIf="showPickupResults && filteredPickupLocations.length > 0">
+                  <ion-item *ngFor="let location of filteredPickupLocations" (click)="selectLocation(location, 'pickup')">
+                     <ion-label>{{ location.name }}</ion-label>
+                     <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
                   </ion-item>
-               </ion-radio-group>
-
-               <div class="ion-padding">
-                  <ion-button expand="block"
-                              color="success"
-                              type="submit"
-                              [disabled]="!rideForm.valid || !selectedRideType">
-                     Confirm Booking
-                  </ion-button>
+               </ion-list>
+               <ion-item>
+                  <ion-label position="stacked">Drop Location</ion-label>
+                  <ion-searchbar [(ngModel)]="dropLocation"
+                                 name="dropLocation"
+                                 required
+                                 placeholder="Search drop location"
+                                 (ionInput)="searchLocations($event, 'drop')"
+                                 [debounce]="500">
+                  </ion-searchbar>
+               </ion-item>
+               <ion-list *ngIf="showDropResults && filteredDropLocations.length > 0">
+                  <ion-item *ngFor="let location of filteredDropLocations" (click)="selectLocation(location, 'drop')">
+                     <ion-label>{{ location.name }}</ion-label>
+                     <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
+                  </ion-item>
+               </ion-list>
+               <div *ngIf="selectedPickupLocation && selectedDropLocation" class="ride-selection">
+                  <ion-text color="success" class="available-rides-text">
+                     <h2>Available Rides</h2>
+                  </ion-text>
+                  <ion-radio-group [(ngModel)]="selectedRideType" name="rideType" required>
+                     <ion-item *ngFor="let ride of rideTypes">
+                        <ion-label>
+                           <h2>
+                              <ion-icon [name]="ride.icon"></ion-icon>
+                              {{ ride.name }}
+                           </h2>
+                           <p>₹{{ getRidePrice(ride.id) }}</p>
+                        </ion-label>
+                        <ion-radio [value]="ride.id" slot="start"></ion-radio>
+                     </ion-item>
+                  </ion-radio-group>
                </div>
+            </div>
+
+            <div class="ion-padding">
+               <ion-button expand="block"
+                           color="success"
+                           type="submit"
+                           [disabled]="!isFormValid()">
+                  {{ includeRide ? 'Book Seat with Ride' : 'Book Seat Only' }}
+               </ion-button>
             </div>
          </form>
       </ion-card-content>

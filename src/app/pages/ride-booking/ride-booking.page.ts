@@ -24,6 +24,7 @@ interface RideType {
    styleUrls: ['ride-booking.page.scss']
 })
 export class RideBookingPage {
+   includeRide: boolean = true;
    selectedRideType: string = '';
    pickupLocation: string = '';
    dropLocation: string = '';
@@ -98,6 +99,25 @@ export class RideBookingPage {
    currentPrices: { [key: string]: number } = {};
 
    constructor(private router: Router) { }
+
+   toggleRideBooking() {
+      if (!this.includeRide) {
+         // Reset ride-related fields when toggling off
+         this.selectedRideType = '';
+         this.pickupLocation = '';
+         this.dropLocation = '';
+         this.selectedPickupLocation = null;
+         this.selectedDropLocation = null;
+         this.currentPrices = {};
+      }
+   }
+
+   isFormValid(): boolean {
+      if (!this.includeRide) {
+         return true; // Only seat booking
+      }
+      return !!(this.selectedRideType && this.selectedPickupLocation && this.selectedDropLocation);
+   }
 
    searchLocations(event: any, type: 'pickup' | 'drop') {
       const searchTerm = event.target.value.toLowerCase();
@@ -180,6 +200,12 @@ export class RideBookingPage {
    }
 
    confirmBooking() {
+      if (!this.includeRide) {
+         alert('Seat booking confirmed!');
+         this.router.navigate(['/tabs/home']);
+         return;
+      }
+
       if (this.selectedRideType && this.pickupLocation && this.dropLocation) {
          const bookingDetails = {
             rideType: this.selectedRideType,
@@ -189,7 +215,7 @@ export class RideBookingPage {
          };
 
          console.log('Booking confirmed:', bookingDetails);
-         alert(`Booking confirmed!\nPickup: ${this.pickupLocation}\nDrop: ${this.dropLocation}\nPrice: ₹${bookingDetails.price}`);
+         alert(`Booking confirmed with ride!\nPickup: ${this.pickupLocation}\nDrop: ${this.dropLocation}\nPrice: ₹${bookingDetails.price}`);
          this.router.navigate(['/tabs/home']);
       }
    }
