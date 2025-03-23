@@ -34,3 +34,5 @@ yarn-error.*
 *.tsbuildinfo
 /.vs
 /.angular/cache/17.3.12
+/android
+/www
