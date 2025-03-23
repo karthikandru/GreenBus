@@ -190,7 +190,7 @@ export class RideBookingPage {
 
          console.log('Booking confirmed:', bookingDetails);
          alert(`Booking confirmed!\nPickup: ${this.pickupLocation}\nDrop: ${this.dropLocation}\nPrice: ₹${bookingDetails.price}`);
-         this.router.navigate(['/home']);
+         this.router.navigate(['/tabs/home']);
       }
    }
 }

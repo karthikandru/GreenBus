@@ -25,14 +25,13 @@
                               (ionInput)="searchLocations($event, 'pickup')"
                               [debounce]="500">
                </ion-searchbar>
-               <ion-list *ngIf="showPickupResults && filteredPickupLocations.length > 0">
-                  <ion-item *ngFor="let location of filteredPickupLocations" (click)="selectLocation(location, 'pickup')">
-                     <ion-label>{{ location.name }}</ion-label>
-                     <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
-                  </ion-item>
-               </ion-list>
             </ion-item>
-
+            <ion-list *ngIf="showPickupResults && filteredPickupLocations.length > 0">
+               <ion-item *ngFor="let location of filteredPickupLocations" (click)="selectLocation(location, 'pickup')">
+                  <ion-label>{{ location.name }}</ion-label>
+                  <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
+               </ion-item>
+            </ion-list>
             <ion-item>
                <ion-label position="stacked">Drop Location</ion-label>
                <ion-searchbar [(ngModel)]="dropLocation"
@@ -42,14 +41,13 @@
                               (ionInput)="searchLocations($event, 'drop')"
                               [debounce]="500">
                </ion-searchbar>
-               <ion-list *ngIf="showDropResults && filteredDropLocations.length > 0">
-                  <ion-item *ngFor="let location of filteredDropLocations" (click)="selectLocation(location, 'drop')">
-                     <ion-label>{{ location.name }}</ion-label>
-                     <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
-                  </ion-item>
-               </ion-list>
             </ion-item>
-
+            <ion-list *ngIf="showDropResults && filteredDropLocations.length > 0">
+               <ion-item *ngFor="let location of filteredDropLocations" (click)="selectLocation(location, 'drop')">
+                  <ion-label>{{ location.name }}</ion-label>
+                  <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
+               </ion-item>
+            </ion-list>
             <div *ngIf="selectedPickupLocation && selectedDropLocation" class="ride-selection">
                <ion-text color="success" class="available-rides-text">
                   <h2>Available Rides</h2>
