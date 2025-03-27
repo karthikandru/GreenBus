@@ -9,12 +9,12 @@ import { BusDetailsPageRoutingModule } from './bus-details-routing.module';
 import { BusDetailsPage } from './bus-details.page';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    BusDetailsPageRoutingModule
-  ],
-  declarations: [BusDetailsPage]
+   imports: [
+      CommonModule,
+      FormsModule,
+      IonicModule,
+      BusDetailsPageRoutingModule
+   ],
+   declarations: [BusDetailsPage]
 })
-export class BusDetailsPageModule {}
+export class BusDetailsPageModule { }
