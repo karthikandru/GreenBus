@@ -181,6 +181,99 @@ export class BusDetailsPage implements OnInit {
                columns: 3,
                unavailableSeats: ['A1', 'B2', 'C3', 'D1', 'E2', 'F3', 'G1', 'H2', 'I3', 'J1', 'K2']
             }
+         },
+         {
+            id: 3,
+            name: 'City Express',
+            type: 'AC Seater',
+            departureTime: '10:15',
+            arrivalTime: '18:45',
+            duration: '8h 30m',
+            price: 900,
+            availableSeats: 20,
+            rating: 4.2,
+            amenities: ['WiFi', 'Charging Point', 'Blanket', 'Water Bottle'],
+            reviews: [
+               {
+                  userName: 'David K.',
+                  rating: 5,
+                  comment: 'Excellent service! Very comfortable seats and clean bus.',
+                  date: '12 May 2025'
+               },
+               {
+                  userName: 'Emma S.',
+                  rating: 4,
+                  comment: 'Good journey. WiFi was working well throughout the trip.',
+                  date: '8 May 2025'
+               }
+            ],
+            seatLayout: {
+               rows: 15,
+               columns: 3,
+               unavailableSeats: ['A1', 'B2', 'C3', 'D1', 'E2', 'F3', 'G1', 'H2', 'I3']
+            }
+         },
+         {
+            id: 4,
+            name: 'Night Rider',
+            type: 'AC Sleeper',
+            departureTime: '22:30',
+            arrivalTime: '05:30',
+            duration: '7h 0m',
+            price: 650,
+            availableSeats: 5,
+            rating: 4.7,
+            amenities: ['WiFi', 'Charging Point', 'Blanket', 'Water Bottle', 'Snacks'],
+            reviews: [
+               {
+                  userName: 'Robert J.',
+                  rating: 5,
+                  comment: 'Best night bus I\'ve ever taken. Slept like a baby!',
+                  date: '25 May 2025'
+               },
+               {
+                  userName: 'Jennifer L.',
+                  rating: 4,
+                  comment: 'Very comfortable sleeper bus. Clean blankets provided.',
+                  date: '22 May 2025'
+               }
+            ],
+            seatLayout: {
+               rows: 8,
+               columns: 4,
+               unavailableSeats: ['A1', 'A2', 'B3', 'B4', 'C1', 'C2', 'D3', 'D4', 'E1', 'E2']
+            }
+         },
+         {
+            id: 5,
+            name: 'Budget Travels',
+            type: 'Non-AC Sleeper',
+            departureTime: '19:45',
+            arrivalTime: '04:15',
+            duration: '8h 30m',
+            price: 700,
+            availableSeats: 15,
+            rating: 3.5,
+            amenities: ['Water Bottle'],
+            reviews: [
+               {
+                  userName: 'Thomas B.',
+                  rating: 3,
+                  comment: 'Decent for the price. Don\'t expect luxury.',
+                  date: '30 May 2025'
+               },
+               {
+                  userName: 'Karen W.',
+                  rating: 4,
+                  comment: 'Good budget option. Bus was clean and on time.',
+                  date: '28 May 2025'
+               }
+            ],
+            seatLayout: {
+               rows: 10,
+               columns: 3,
+               unavailableSeats: ['A1', 'B2', 'C3', 'D1', 'E2', 'F3', 'G1']
+            }
          }
       ];
 
