@@ -19,6 +19,7 @@
 
       <ion-card-content>
          <form (ngSubmit)="confirmBooking()" #rideForm="ngForm">
+
             <div *ngIf="includeRide">
                <ion-item>
                   <ion-label position="stacked">Pickup Location</ion-label>
@@ -36,22 +37,14 @@
                      <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
                   </ion-item>
                </ion-list>
+
                <ion-item>
                   <ion-label position="stacked">Drop Location</ion-label>
-                  <ion-searchbar [(ngModel)]="dropLocation"
-                                 name="dropLocation"
-                                 required
-                                 placeholder="Search drop location"
-                                 (ionInput)="searchLocations($event, 'drop')"
-                                 [debounce]="500">
-                  </ion-searchbar>
+                  <ion-label>                    
+                     <p>{{ dropLocation }}</p>
+                  </ion-label>
                </ion-item>
-               <ion-list *ngIf="showDropResults && filteredDropLocations.length > 0">
-                  <ion-item *ngFor="let location of filteredDropLocations" (click)="selectLocation(location, 'drop')">
-                     <ion-label>{{ location.name }}</ion-label>
-                     <ion-note slot="end" color="medium">{{ location.zone }}</ion-note>
-                  </ion-item>
-               </ion-list>
+
                <div *ngIf="selectedPickupLocation && selectedDropLocation" class="ride-selection">
                   <ion-text color="success" class="available-rides-text">
                      <h2>Available Rides</h2>
@@ -69,6 +62,24 @@
                      </ion-item>
                   </ion-radio-group>
                </div>
+               
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="booking-summary">
+               <h2>Booking Summary</h2>
+               <div class="summary-item">
+                  <span>Bus Seats ({{bookingDetails.selectedSeats.join(', ')}})</span>
+                  <span>₹ {{bookingDetails.totalAmount}}</span>
+               </div>
+               <div *ngIf="includeRide && selectedRideType" class="summary-item">
+                  <span>Last-Mile Ride ({{selectedRideType}})</span>
+                  <span>₹ {{getRidePrice(selectedRideType)}}</span>
+               </div>
+               <div class="summary-item total">
+                  <span>Total Amount</span>
+                  <span>₹ {{getTotalAmount()}}</span>
+               </div>
             </div>
 
             <div class="ion-padding">
@@ -76,7 +87,7 @@
                            color="success"
                            type="submit"
                            [disabled]="!isFormValid()">
-                  {{ includeRide ? 'Book Seat with Ride' : 'Book Seat Only' }}
+                  Confirm Booking
                </ion-button>
             </div>
          </form>

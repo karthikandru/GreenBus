@@ -18,6 +18,13 @@ interface RideType {
    pricePerKm: number;
 }
 
+interface BusBookingDetails {
+   selectedSeats: string[];
+   totalAmount: number;
+   boardingPoint: Location;
+   busDetails: any;
+}
+
 @Component({
    selector: 'app-ride-booking',
    templateUrl: 'ride-booking.page.html',
@@ -28,8 +35,17 @@ export class RideBookingPage {
    selectedRideType: string = '';
    pickupLocation: string = '';
    dropLocation: string = '';
+   bookingDetails: BusBookingDetails = {
+      selectedSeats: [],
+      totalAmount: 0,
+      boardingPoint: {
+         name: '',
+         zone: '',
+         coordinates: { lat: 0, lng: 0 }
+      },
+      busDetails: null
+   };
 
-   // Sample locations with zones and coordinates
    locations: Location[] = [
       {
          name: 'Airport Terminal 1',
@@ -98,23 +114,48 @@ export class RideBookingPage {
    selectedDropLocation: Location | null = null;
    currentPrices: { [key: string]: number } = {};
 
-   constructor(private router: Router) { }
+   constructor(private router: Router) {
+      const navigation = this.router.getCurrentNavigation();
+      if (navigation?.extras.state) {
+         const state = navigation.extras.state as BusBookingDetails;
+         this.bookingDetails = { ...state };
+         this.dropLocation = state.boardingPoint.name;
+         this.selectedDropLocation = { ...state.boardingPoint };
+      }
+   }
 
    toggleRideBooking() {
       if (!this.includeRide) {
-         // Reset ride-related fields when toggling off
-         this.selectedRideType = '';
-         this.pickupLocation = '';
-         this.dropLocation = '';
-         this.selectedPickupLocation = null;
-         this.selectedDropLocation = null;
-         this.currentPrices = {};
+         this.resetRideDetails();
       }
+   }
+
+   resetRideDetails() {
+      this.selectedRideType = '';
+      this.pickupLocation = '';
+      this.selectedPickupLocation = null;
+      this.currentPrices = {};
+   }
+
+   resetAllDetails() {
+      this.resetRideDetails();
+      this.dropLocation = '';
+      this.selectedDropLocation = null;
+      this.bookingDetails = {
+         selectedSeats: [],
+         totalAmount: 0,
+         boardingPoint: {
+            name: '',
+            zone: '',
+            coordinates: { lat: 0, lng: 0 }
+         },
+         busDetails: null
+      };
    }
 
    isFormValid(): boolean {
       if (!this.includeRide) {
-         return true; // Only seat booking
+         return true;
       }
       return !!(this.selectedRideType && this.selectedPickupLocation && this.selectedDropLocation);
    }
@@ -147,11 +188,11 @@ export class RideBookingPage {
    selectLocation(location: Location, type: 'pickup' | 'drop') {
       if (type === 'pickup') {
          this.pickupLocation = location.name;
-         this.selectedPickupLocation = location;
+         this.selectedPickupLocation = { ...location };
          this.showPickupResults = false;
       } else {
          this.dropLocation = location.name;
-         this.selectedDropLocation = location;
+         this.selectedDropLocation = { ...location };
          this.showDropResults = false;
       }
 
@@ -182,10 +223,9 @@ export class RideBookingPage {
 
       const distance = this.calculateDistance(this.selectedPickupLocation, this.selectedDropLocation);
 
-      // Apply zone-based multipliers
       let zoneMultiplier = 1;
       if (this.selectedPickupLocation.zone === 'Airport' || this.selectedDropLocation.zone === 'Airport') {
-         zoneMultiplier = 1.5; // Airport zone has higher rates
+         zoneMultiplier = 1.5;
       }
 
       this.rideTypes.forEach(ride => {
@@ -199,24 +239,26 @@ export class RideBookingPage {
       return this.currentPrices[rideId] || 0;
    }
 
-   confirmBooking() {
-      if (!this.includeRide) {
-         alert('Seat booking confirmed!');
-         this.router.navigate(['/tabs/home']);
-         return;
-      }
+   getTotalAmount(): number {
+      const rideAmount = this.selectedRideType ? this.getRidePrice(this.selectedRideType) : 0;
+      return this.bookingDetails.totalAmount + (this.includeRide ? rideAmount : 0);
+   }
 
-      if (this.selectedRideType && this.pickupLocation && this.dropLocation) {
-         const bookingDetails = {
+   confirmBooking() {
+      const bookingDetails = {
+         busBooking: { ...this.bookingDetails },
+         ride: this.includeRide ? {
             rideType: this.selectedRideType,
             pickup: this.pickupLocation,
             drop: this.dropLocation,
             price: this.getRidePrice(this.selectedRideType)
-         };
+         } : null,
+         totalAmount: this.getTotalAmount()
+      };
 
-         console.log('Booking confirmed:', bookingDetails);
-         alert(`Booking confirmed with ride!\nPickup: ${this.pickupLocation}\nDrop: ${this.dropLocation}\nPrice: ₹${bookingDetails.price}`);
-         this.router.navigate(['/tabs/home']);
-      }
+      console.log('Booking confirmed:', bookingDetails);
+      alert(`Booking confirmed!\nTotal Amount: ₹${this.getTotalAmount()}`);
+      this.resetAllDetails();
+      this.router.navigate(['/tabs/home']);
    }
 }
